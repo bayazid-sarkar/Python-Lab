@@ -14,16 +14,13 @@ class ModernQRDesigner:
         self.root.geometry("500x700")
         self.root.minsize(450, 600)
         
-        # Initialize style
         self.style = ttk.Style()
         self.style.theme_use('clam')
         
-        # Theme setup
         self.dark_mode = False
         self.setup_themes()
         self.set_theme()
         
-        # Style options
         self.style_options = {
             "Square": SquareModuleDrawer(),
             "Gapped": GappedSquareModuleDrawer(),
@@ -31,58 +28,55 @@ class ModernQRDesigner:
             "Rounded": RoundedModuleDrawer(),
         }
         
-        # Variables
         self.qr_text = tk.StringVar()
         self.qr_style = tk.StringVar(value="Square")
-        self.foreground_color = (0, 0, 0)  # Black
-        self.background_color = (128,128,128)
+        self.foreground_color = (0, 0, 0)
+        self.background_color = (255, 255, 255)
         self.qr_size = tk.IntVar(value=250)
         self.logo_path = ""
         self.generated_qr = None
         self.last_update_id = None
         
-        # Setup UI
         self.create_ui()
         self.setup_bindings()
     
     def setup_themes(self):
         self.themes = {
             "light": {
-                "bg": "#ffffff",  # White background
-                "surface": "#f5f5f5",  # Light gray surface
-                "text": "#000000",  # Black text
-                "primary": "#008000",  # Green for primary buttons
-                "button_primary": "#008000",  # Green for primary buttons
-                "button_secondary": "#FFA500",  # Orange for secondary buttons
-                "button_danger": "#FF4500",  # Orange-red for remove actions
-                "border": "#e0e0e0",  # Light gray border
-                "highlight": "#f0f0f0",  # Very light gray for highlights
-                "text_secondary": "#333333",  # Dark gray for secondary text
-                "slider_trough": "#e0e0e0",  # Light gray for slider trough
-                "slider_active": "#008000",  # Green for active slider
-                "combobox_arrow": "#333333"  # Dark gray for combobox arrow
+                "bg": "#ffffff",
+                "surface": "#f5f5f5",
+                "text": "#000000",
+                "primary": "#008000",
+                "button_primary": "#008000",
+                "button_secondary": "#FFA500",
+                "button_danger": "#FF4500",
+                "border": "#e0e0e0",
+                "highlight": "#f0f0f0",
+                "text_secondary": "#333333",
+                "slider_trough": "#e0e0e0",
+                "slider_active": "#008000",
+                "combobox_arrow": "#333333"
             },
             "dark": {
-                "bg": "#121212",  # Very dark gray (almost black)
-                "surface": "#1e1e1e",  # Dark gray surface
-                "text": "#4CAF50",  # Deep green text
-                "primary": "#4CAF50",  # Brighter green for primary buttons
-                "button_primary": "#4CAF50",  # Brighter green for primary buttons
-                "button_secondary": "#FF8C00",  # Darker orange for secondary buttons
-                "button_danger": "#FF6347",  # Tomato red for remove actions
-                "border": "#333333",  # Dark gray border
-                "highlight": "#2a2a2a",  # Slightly lighter than bg
-                "text_secondary": "#cccccc",  # Light gray for secondary text
-                "slider_trough": "#333333",  # Dark gray for slider trough
-                "slider_active": "#4CAF50",  # Green for active slider
-                "combobox_arrow": "#ffffff"  # White for combobox arrow
+                "bg": "#121212",
+                "surface": "#1e1e1e",
+                "text": "#4CAF50",
+                "primary": "#4CAF50",
+                "button_primary": "#4CAF50",
+                "button_secondary": "#FF8C00",
+                "button_danger": "#FF6347",
+                "border": "#333333",
+                "highlight": "#2a2a2a",
+                "text_secondary": "#cccccc",
+                "slider_trough": "#333333",
+                "slider_active": "#4CAF50",
+                "combobox_arrow": "#ffffff"
             }
         }
     
     def set_theme(self):
         theme = self.themes["dark" if self.dark_mode else "light"]
         
-        # Update theme colors
         self.bg_color = theme["bg"]
         self.surface_color = theme["surface"]
         self.text_color = theme["text"]
@@ -97,12 +91,10 @@ class ModernQRDesigner:
         self.slider_active = theme["slider_active"]
         self.combobox_arrow = theme["combobox_arrow"]
         
-        # Configure styles
         self.style.configure(".", background=self.bg_color, foreground=self.text_color)
         self.style.configure("TFrame", background=self.bg_color)
         self.style.configure("TLabel", background=self.bg_color, foreground=self.text_color)
         
-        # Primary buttons (green) - More prominent hover effects
         self.style.configure("Primary.TButton", 
                            background=self.button_primary,
                            foreground="white",
@@ -118,7 +110,6 @@ class ModernQRDesigner:
                                  ('pressed', self.darken_color(self.button_primary, 60))],
                       relief=[('active', 'sunken'), ('pressed', 'sunken')])
         
-        # Secondary buttons (orange) - More prominent hover effects
         self.style.configure("Secondary.TButton", 
                            background=self.button_secondary,
                            foreground="white",
@@ -133,7 +124,6 @@ class ModernQRDesigner:
                                  ('pressed', self.darken_color(self.button_secondary, 60))],
                       relief=[('active', 'sunken'), ('pressed', 'sunken')])
         
-        # Danger buttons (orange-red) - More prominent hover effects
         self.style.configure("Danger.TButton", 
                            background=self.button_danger,
                            foreground="white",
@@ -148,7 +138,6 @@ class ModernQRDesigner:
                                  ('pressed', self.darken_color(self.button_danger, 60))],
                       relief=[('active', 'sunken'), ('pressed', 'sunken')])
         
-        # Modern Combobox styling
         self.style.configure("Modern.TCombobox", 
                            fieldbackground=self.surface_color,
                            background=self.surface_color,
@@ -173,7 +162,6 @@ class ModernQRDesigner:
                       darkcolor=[('active', self.button_primary),
                                 ('focus', self.button_primary)])
         
-        # Modern Scale (Slider) styling
         self.style.configure("Modern.Horizontal.TScale",
                            background=self.bg_color,
                            troughcolor=self.slider_trough,
@@ -187,7 +175,6 @@ class ModernQRDesigner:
                       slidercolor=[('active', self.slider_active)],
                       troughcolor=[('active', self.slider_trough)])
         
-        # Toggle button styling with more prominent hover
         self.style.configure("Toggle.TButton", 
                            background=self.highlight_color,
                            foreground=self.text_color,
@@ -197,7 +184,6 @@ class ModernQRDesigner:
                       background=[('active', self.darken_color(self.highlight_color, 20)),
                                  ('pressed', self.darken_color(self.highlight_color, 40))])
         
-        # Update all widgets
         self.root.configure(bg=self.bg_color)
         if hasattr(self, 'main_frame'):
             self.main_frame.configure(style="TFrame")
@@ -207,12 +193,10 @@ class ModernQRDesigner:
             self.preview_frame.configure(style="TFrame")
             self.preview_frame.configure(highlightbackground=self.border_color)
         
-        # Update toggle button
         if hasattr(self, 'theme_toggle'):
             self.theme_toggle.configure(text="☀️" if self.dark_mode else "🌙",
                                       style="Toggle.TButton")
         
-        # Update other buttons
         if hasattr(self, 'fg_btn'):
             self.fg_btn.configure(style="Secondary.TButton")
         if hasattr(self, 'bg_btn'):
@@ -225,7 +209,6 @@ class ModernQRDesigner:
             self.save_btn.configure(style="Primary.TButton")
     
     def darken_color(self, color, amount=10):
-        """Darken a hex color by a certain amount"""
         if isinstance(color, str) and color.startswith('#'):
             rgb = tuple(int(color[i:i+2], 16) for i in (1, 3, 5))
             return f'#{max(0, rgb[0]-amount):02x}{max(0, rgb[1]-amount):02x}{max(0, rgb[2]-amount):02x}'
@@ -246,26 +229,21 @@ class ModernQRDesigner:
         self.last_update_id = self.root.after(500, self.update_live_preview)
     
     def create_ui(self):
-        # Main container
         self.main_frame = ttk.Frame(self.root, padding=(15, 10))
         self.main_frame.pack(fill=tk.BOTH, expand=True)
         
-        # Header with theme toggle
         header_frame = ttk.Frame(self.main_frame)
         header_frame.pack(fill=tk.X, pady=(0, 10))
         
-        # Title with green color
         title = ttk.Label(header_frame, text="QR-সাজাই", 
                          font=("Segoe UI", 18, "bold"),
                          foreground=self.button_primary)
         title.pack(side=tk.LEFT)
         
-        # Theme toggle button
         self.theme_toggle = ttk.Button(header_frame, text="☀️" if self.dark_mode else "🌙",
                                      command=self.toggle_theme, style="Toggle.TButton")
         self.theme_toggle.pack(side=tk.RIGHT)
         
-        # Input Section
         self.input_frame = ttk.Frame(self.main_frame, padding=10, relief=tk.RIDGE, borderwidth=1)
         self.input_frame.pack(fill=tk.X, pady=5)
         
@@ -274,11 +252,9 @@ class ModernQRDesigner:
                                      font=("Segoe UI", 10))
         self.content_entry.pack(fill=tk.X, pady=5)
         
-        # Style and Colors
         style_color_frame = ttk.Frame(self.main_frame)
         style_color_frame.pack(fill=tk.X, pady=5)
         
-        # Modern Style dropdown
         ttk.Label(style_color_frame, text="QR STYLE:", font=("Segoe UI", 9)).grid(row=0, column=0, sticky="w", padx=(5, 0))
         style_menu = ttk.Combobox(style_color_frame, textvariable=self.qr_style, 
                                 values=list(self.style_options.keys()), 
@@ -286,10 +262,8 @@ class ModernQRDesigner:
                                 style="Modern.TCombobox")
         style_menu.grid(row=1, column=0, sticky="w", padx=5, pady=2)
         
-        # Configure popup menu for combobox
         style_menu.bind("<<ComboboxSelected>>", lambda e: self.root.focus())
         
-        # Color buttons (orange)
         color_frame = ttk.Frame(style_color_frame)
         color_frame.grid(row=0, column=1, rowspan=2, sticky="e", padx=5)
         
@@ -301,23 +275,19 @@ class ModernQRDesigner:
                                style="Secondary.TButton")
         self.bg_btn.pack(side=tk.LEFT)
         
-        # Size and Logo
         size_logo_frame = ttk.Frame(self.main_frame)
         size_logo_frame.pack(fill=tk.X, pady=5)
         
-        # Modern Size slider
         ttk.Label(size_logo_frame, text=f"ADJUST SIZE", font=("Segoe UI", 9)).grid(row=0, column=0, sticky="w", padx=(5, 0))
         size_slider = ttk.Scale(size_logo_frame, from_=150, to=500, variable=self.qr_size, 
                               command=self.on_size_change, length=180,
                               style="Modern.Horizontal.TScale")
         size_slider.grid(row=1, column=0, sticky="w", padx=5, pady=2)
         
-        # Custom slider styling (additional tweaks)
         self.style.configure("Modern.Horizontal.TScale",
                            slidercolor=self.slider_active,
                            troughcolor=self.slider_trough)
         
-        # Logo buttons (orange for add, orange-red for remove)
         logo_frame = ttk.Frame(size_logo_frame)
         logo_frame.grid(row=0, column=1, rowspan=2, sticky="e", padx=5)
         
@@ -329,7 +299,6 @@ class ModernQRDesigner:
                                         style="Danger.TButton")
         self.logo_remove_btn.pack(side=tk.LEFT)
         
-        # Preview area
         self.preview_frame = ttk.Frame(self.main_frame, relief=tk.SOLID, borderwidth=1)
         self.preview_frame.pack(fill=tk.BOTH, expand=True, pady=5)
         
@@ -337,16 +306,13 @@ class ModernQRDesigner:
                                         font=("Segoe UI", 10), anchor="center")
         self.qr_preview_label.pack(fill=tk.BOTH, expand=True, padx=5, pady=5)
         
-        # Save button (green)
         self.save_btn = ttk.Button(self.main_frame, text="SAVE QR CODE", command=self.save_qr,
                                  style="Primary.TButton")
         self.save_btn.pack(fill=tk.X, pady=5)
         
-        # Status bar
         self.status_label = ttk.Label(self.main_frame, text="Ready", font=("Segoe UI", 8), anchor="w")
         self.status_label.pack(fill=tk.X, pady=(5, 0))
         
-        # Initial preview update
         self.update_live_preview()
     
     def on_size_change(self, value):
@@ -360,7 +326,7 @@ class ModernQRDesigner:
             self.schedule_preview_update()
     
     def choose_background_color(self):
-        color = colorchooser.askcolor(title="Choose Background Color", initialcolor="#FFFFFF")
+        color = colorchooser.askcolor(title="Choose Background Color", initialcolor="#ffffff")
         if color[0]:
             self.background_color = tuple(map(int, color[0]))
             self.schedule_preview_update()
